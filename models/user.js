@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   User.associate = function(models) {
-    // associations can be defined here
+    this.Likes = User.belongsToMany(models.Video, { through: 'Likes' });
+    this.Dislikes = User.belongsToMany(models.Video, { through: 'Dislikes' });
   };
   return User;
 };
