@@ -1,0 +1,27 @@
+{
+  "development": {
+    "username": "root",
+    "password": "changeMe",
+    "database": "youtube_clone_dev",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "test": {
+    "database": "youtube_clone_test",
+    "username": "root",
+    "password": "changeMe",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "logging": false
+  },
+  "production": {
+    "username": "root",
+    "password": "changeMe",
+    "database": "youtube_clone_prod",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  }
+}
+
