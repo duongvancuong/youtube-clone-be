@@ -16,4 +16,7 @@ $ yarn dev
 
 # migrate & generate database
 $ yarn sql
+
+# seed data
+$ sequelize db:seed:all
 ```

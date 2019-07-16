@@ -1,4 +1,6 @@
 const { User } = require('../models');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const resolvers = {
   Query: {
@@ -6,8 +8,10 @@ const resolvers = {
     users: () => User.findAll(),
   },
   Mutation: {
-    createUser: async (_, data, __) => {
-      User.create(data);
+    createUser: (_, { input }, __) => {
+			bcrypt.hash(input.password, saltRounds, async function(err, hash) {
+				return await User.create({ ...input, password: hash });	
+			});
     },
   },
 };
