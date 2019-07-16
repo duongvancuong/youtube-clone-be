@@ -1,6 +1,6 @@
 module.exports = `
 type User {
-    uuid: ID!
+    id: ID!
     email: String
     password: String
     firstName: String
@@ -15,13 +15,14 @@ input UserInput {
 }
 
 extend type Query {
-    userById(uuid: ID!): User
+    userById(id: ID!): User
     users: [User]
 }
 
 extend type Mutation {
     createUser(input: UserInput!): User
-    updateUser(uuid: ID!, input: UserInput!): User
-    deleteUser(uuid: ID!): Boolean
+    updateUser(id: ID!, input: UserInput!): User
+    deleteUser(id: ID!): Boolean
 }
 `;
+

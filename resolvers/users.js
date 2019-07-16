@@ -2,6 +2,7 @@ const models = require('../models');
 
 const resolvers = {
   Query: {
-    userById: (_, { uuid }) => models.user.findById(uuid),
+    userById: (_, { id }) => models.user.findById(id),
   }
 };
+
