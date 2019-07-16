@@ -1,8 +1,15 @@
-const models = require('../models');
+const { User } = require('../models');
 
 const resolvers = {
   Query: {
-    userById: (_, { id }) => models.user.findById(id),
-  }
+    userById: (_, { id }) => User.findById(id),
+    users: () => User.findAll(),
+  },
+  Mutation: {
+    createUser: async (_, data, __) => {
+      User.create(data);
+    },
+  },
 };
 
+module.exports = resolvers;
