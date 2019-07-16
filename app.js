@@ -17,11 +17,11 @@ const usersRouter = require('./routes/users');
 
 passport.use(new LocalStrategy(
   {
-    usernameField: 'login',
+    usernameField: 'email',
     passwordField: 'password',
     session: false
   },
-  function (login, password, done) {
+  function (email, password, done) {
   }
 ));
 
@@ -53,7 +53,7 @@ if (env === 'development') {
   app.use(
     '/graphiql',
     graphiqlExpress({
-      endpointURL: '/graphql-test'
+      endpointURL: '/graphql'
     })
   );
 }
