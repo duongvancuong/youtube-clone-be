@@ -1,9 +1,11 @@
-module.exports = `
-scalar GraphQLDate
-scalar GraphQLTime
-scalar GraphQLDateTime
+const { gql } = require('apollo-server-express');
 
-type Query
+module.exports = gql`
+  scalar GraphQLDate
+  scalar GraphQLTime
+  scalar GraphQLDateTime
 
-type Mutation
+  type Query
+
+  type Mutation
 `;
