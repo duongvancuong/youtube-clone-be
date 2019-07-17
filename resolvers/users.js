@@ -4,7 +4,7 @@ const saltRounds = 10;
 
 const resolvers = {
   Query: {
-    userById: (_, { id }) => User.findById(id),
+    userById: (_, { id }) => User.findByPk(id),
     users: () => User.findAll(),
   },
   Mutation: {

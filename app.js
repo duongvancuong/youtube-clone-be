@@ -1,61 +1,60 @@
 require('dotenv').config();
+
 const express = require('express');
-const path = require('path');
+const { ApolloServer, gql, makeExecutableSchema } = require('apollo-server-express');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
-const { makeExecutableSchema } = require('graphql-tools');
-const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+const redis = require('redis');
+const redisClient = redis.createClient();
+const redisStore = require('connect-redis')(session);
+
 const typeDefs = require('./schemas');
 const resolvers = require('./resolvers');
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-passport.use(new LocalStrategy(
-  {
-    usernameField: 'email',
-    passwordField: 'password',
-    session: false
-  },
-  function (email, password, done) {
-  }
-));
+require('./middlewares/auth');
 
-var app = express();
+const app = express();
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
+const server = new ApolloServer({
+	schema,
+	context: ({req, res}) => ({
+		currentUser: req.user,
+	}),
+});
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('dev'));
+
+redisClient.on('error', err => console.log('Redis error: ', err));
+app.use(session({
+  secret: process.env.SECRET_KEY,
+  name: process.env.SESSION_NAME,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false },
+  store: new redisStore({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT, client: redisClient, ttl: 86400 }),
+}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(logger('dev'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use(
-  '/graphql',
-  graphqlExpress(request => {
-    return {
-      schema,
-      context: { request },
-    };
-  })
-);
+app.post('/login', passport.authenticate('local'));
 
-const env = process.env.NODE_ENV || 'production';
-if (env === 'development') {
-  app.use(
-    '/graphiql',
-    graphiqlExpress({
-      endpointURL: '/graphql'
-    })
-  );
-}
+server.applyMiddleware({ app });
 
 module.exports = app;
