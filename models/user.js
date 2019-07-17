@@ -5,16 +5,42 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       primaryKey: true,
     },
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        max: 30,
+        min: 1,
+      },
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        max: 30,
+        min: 1,
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+        notNull: true,
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   }, {});
   User.associate = function(models) {
-    this.Likes = User.belongsToMany(models.Video, { through: 'Likes' });
-    this.Dislikes = User.belongsToMany(models.Video, { through: 'Dislikes' });
+    User.belongsToMany(models.Video, { as: 'VideosLikedByUser', through: models.Like, foreignKey: 'UserId' });
+    User.belongsToMany(models.Video, { as: 'VideosDislikedByUser', through: models.Dislike, foreignKey: 'UserId' });
   };
   return User;
 };

@@ -6,8 +6,10 @@ const { gql } = require('apollo-server-express');
     author: String
     viewer: Int
     url: String
-    like: Int
-    dislike: Int
+    likers: [User!]
+    no_likers: Int
+    dislikers: [User!]
+    no_dislikers: Int
   }
 
   input VideoInput {

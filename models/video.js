@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   Video.associate = function(models) {
-    this.Likers = Video.belongsToMany(models.User, { through: 'Likes' });
-    this.Dislikers = Video.belongsToMany(models.User, { through: 'Dislikes' });
+    Video.belongsToMany(models.User, { as: 'UsersLikedVideo', through: models.Like, foreignKey: 'VideoId' });
+    Video.belongsToMany(models.User, { as: 'UsersDislikedVideo', through: models.Dislike, foreignKey: 'VideoId' });
   };
   return Video;
 };
