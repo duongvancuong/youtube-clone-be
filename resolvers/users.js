@@ -9,9 +9,9 @@ const resolvers = {
   },
   Mutation: {
     createUser: (_, { input }, __) => {
-			bcrypt.hash(input.password, saltRounds, async function(err, hash) {
-				return await User.create({ ...input, password: hash });	
-			});
+      bcrypt.hash(input.password, saltRounds, async function(err, hash) {
+        return await User.create({ ...input, password: hash });
+      });
     },
   },
 };
