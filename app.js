@@ -53,7 +53,9 @@ app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.post('/login', passport.authenticate('local'));
+app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+  res.json({ message: 'ok' });
+});
 
 server.applyMiddleware({ app });
 
